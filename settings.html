@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout Helper - Home</title>
+    <title>Workout Helper - Settings</title>
     <style>
         body, html {
             margin: 0;
@@ -65,51 +65,71 @@
             background-color: #f1f1f1;
         }
         .main {
-            display: flex;
             flex: 1;
-        }
-        .left-section {
-            flex: 1;
-            background-color: #F0F8FF;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .left-section h2 {
+        .settings-title {
             color: #2196F3;
             font-size: 2em;
-            margin: 0;
+            margin: 20px 0;
         }
-        .right-section {
-            flex: 3;
-            padding: 20px;
+        .form-group {
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #F5F5F5;
+        }
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            font-size: 1.2em;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="header-left">
-            <a href="#">Home</a>
+            <a href="home.html">Home</a>
             <a href="#">Workouts</a>
         </div>
         <div class="profile" onclick="toggleDropdown()">U</div>
         <div class="dropdown" id="profileDropdown">
-            <a>Hello, Username</a>
-            <a href="#">Profile</a>
+            <a href="#">Hello, Username</a>
+            <a href="profile.html">Profile</a>
             <a href="settings.html">Settings</a>
-            <a href="#">Log Out</a>
+            <a href="logout.html">Log Out</a>
         </div>
     </div>
     <div class="main">
-        <div class="left-section">
-            <h2>Today's Goals</h2>
-            <!-- Add content for today's goals here if needed -->
-        </div>
-        <div class="right-section">
-            <h1>Welcome to Workout Helper</h1>
-            <p>This is your home page where you can track your fitness journey and manage your workouts.</p>
-        </div>
+        <h1 class="settings-title">Settings</h1>
+        <form method="POST" action="settings.php">
+            <div class="form-group">
+                <label for="step-goal">Set Your Step Goal:</label>
+                <input type="number" id="step-goal" name="step-goal" placeholder="Enter step goal" required>
+                <button type="submit" name="save-goal">Save Goal</button>
+            </div>
+        </form>
     </div>
     <div class="footer">
         <div class="footer-left">
@@ -146,3 +166,4 @@
     </script>
 </body>
 </html>
+
