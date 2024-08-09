@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout Helper - Home</title>
+    <title>Workout Helper - Admin</title>
     <style>
         body, html {
             margin: 0;
@@ -20,89 +20,75 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 5%;
+            padding: 10px 20px;
         }
         .header-left, .footer-left, .footer-right {
             display: flex;
-            gap: 10px;
+            gap: 20px;
         }
         .header-left a, .footer-right a {
             color: white;
             text-decoration: none;
-            font-size: 1em;
+            font-size: 1.5em;
         }
         .profile {
             position: relative;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background-color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #2196F3;
-            font-size: 1em;
+            font-size: 1.2em;
+            font-weight: bold;
             cursor: pointer;
         }
         .dropdown {
             display: none;
             position: absolute;
-            top: 50px;
-            right: 5%;
+            top: 60px;
+            right: 0;
             background-color: white;
             box-shadow: 0 8px 16px rgba(0,0,0,0.2);
             z-index: 1;
-            width: 150px;
+            width: 200px;
         }
         .dropdown a {
             display: block;
-            padding: 8px 10px;
+            padding: 10px;
             color: black;
             text-decoration: none;
-            font-size: 0.9em;
         }
         .dropdown a:hover {
             background-color: #f1f1f1;
         }
         .main {
-            display: flex;
-            flex-direction: column;
             flex: 1;
-        }
-        .left-section, .right-section {
             padding: 20px;
-        }
-        .left-section h2, .right-section h1 {
-            color: #2196F3;
-            font-size: 1.5em;
-        }
-        .right-section p {
-            font-size: 1em;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="header-left">
-            <a href="#">Home</a>
+            <a href="home.php">Home</a>
             <a href="#">Workouts</a>
+            <a href="#">Users</a>
         </div>
         <div class="profile" onclick="toggleDropdown()">U</div>
         <div class="dropdown" id="profileDropdown">
-            <a>Hello, Username</a>
-            <a href="#">Profile</a>
-            <a href="settings.html">Settings</a>
+            <a href="#">Hello, Username</a>
+            <a href="profile.php">Profile</a>
+            <a href="settings.php">Settings</a>
             <a href="logout.html">Log Out</a>
         </div>
     </div>
     <div class="main">
-        <div class="left-section">
-            <h2>Today's Goals</h2>
-        </div>
-        <div class="right-section">
-            <h1>Welcome to Workout Helper</h1>
-            <p>This is your home page where you can track your fitness journey and manage your workouts.</p>
-        </div>
+        <h1>Admin Dashboard</h1>
+        <p>Welcome to the admin dashboard. From here, you can manage users, monitor activities, and adjust application settings.</p>
+        <!-- Add more admin functionalities here -->
     </div>
     <div class="footer">
         <div class="footer-left">
@@ -124,6 +110,7 @@
             }
         }
 
+        // Close the dropdown if the user clicks outside of it
         window.onclick = function(event) {
             if (!event.target.matches('.profile')) {
                 var dropdowns = document.getElementsByClassName("dropdown");

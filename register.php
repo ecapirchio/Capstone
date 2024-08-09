@@ -1,4 +1,4 @@
-<?php
+<?php/*
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['register'])) {
         $username = $_POST['username'];
@@ -57,5 +57,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
         $conn->close();
     }
+}*/
+?>
+
+<?php
+include 'db_connect.php'; // Include the database connection
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['register'])) {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
+
+        // Check if passwords match
+        if ($password !== $confirm_password) {
+            echo "Passwords do not match.";
+            exit;
+        }
+
+        // Check if username already exists
+        $sql = "SELECT * FROM users WHERE UName = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            echo "Username already taken.";
+            $stmt->close();
+            $conn->close();
+            exit;
+        }
+
+        // Insert new user
+        $sql = "INSERT INTO users (UName, PW) VALUES (?, ?)";
+        $stmt = $conn->prepare($sql);
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->bind_param("ss", $username, $hashed_password);
+
+        if ($stmt->execute()) {
+            echo "Registration successful.";
+            // Redirect to login page
+            header("Location: login.html");
+            exit;
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+
+        $stmt->close();
+        $conn->close();
+    }
 }
 ?>
+
