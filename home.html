@@ -170,6 +170,29 @@
             color: #2196F3; /* Blue color */
         }
 
+        .monday-rectangle {
+            display: flex;
+            width: 100%;
+            margin-top: 20px; /* Space below the days of the week */
+        }
+
+        .blue-rectangle {
+            background-color: #75C2FF; /* Blue color */
+            color: white;
+            width: 20%; /* Takes up about 27% of the width */
+            padding: 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .light-blue-rectangle {
+            background-color: #F0F8FF; /* Light blue color */
+            width: 80%; /* Takes up the rest of the width */
+            padding: 20px;
+        }
+
         .footer {
             display: flex;
             flex-direction: column;
@@ -252,7 +275,10 @@
         <div class="day">Sat</div>
     </div>
 
-    <div class="spacer"></div> <!-- Adds white space before the new section -->
+    <div class="monday-rectangle">
+        <div class="blue-rectangle">Monday</div>
+        <div class="light-blue-rectangle"></div>
+    </div>
 
     <!-- Main content of the page -->
     <main style="padding-top: 20px;">
