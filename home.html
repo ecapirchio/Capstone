@@ -146,7 +146,7 @@
             margin-top: 30px; /* Adds space before the new section */
         }
 
-        .my-routines {
+        .my-routines, .browse-workouts {
             background-color: #1D3B6E; /* Dark blue color */
             color: white;
             width: 100%;
@@ -170,10 +170,11 @@
             color: #2196F3; /* Blue color */
         }
 
-        .monday-rectangle {
+        .day-rectangle {
             display: flex;
             width: 100%;
             margin-top: 20px; /* Space below the days of the week */
+            border-bottom: 5px solid #75C2FF;
         }
 
         .blue-rectangle {
@@ -184,7 +185,6 @@
             font-size: 16px;
             font-weight: bold;
             border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -204,6 +204,85 @@
         #calories, #steps {
             margin: 0px; /* Adds space between calories and steps */
         }
+
+
+        .routine-rectangle {
+            background-color: #AFDCFF;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .exercise {
+            text-align: center;
+            width: 30%; /* Ensure consistent sizing for all exercise blocks */
+        }
+
+        .exercise img {
+            width: 100%; /* Image fills the width of its container */
+            height: auto;
+        }
+
+        .exercise a {
+            display: block; /* Make the link block level for better clickability */
+            color: #2196F3; /* Blue color for links */
+            font-size: 16px;
+            margin-top: 10px; /* Space between the image and the link */
+        }
+
+        .exercise p {
+            color: black;
+            font-size: 14px;
+            margin-top: 5px; /* Space between the link and the description */
+        }
+
+        .search-bar {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .search-bar form {
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .search-bar input[type="text"] {
+            font-size: 16px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            width: 300px; /* Adjust width as needed */
+        }
+
+        .search-bar button {
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: #1976D2; /* Darker blue on hover */
+        }
+
+        .search-bar select {
+            font-size: 16px;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-left: 10px; /* Adds space between the text input and the dropdown */
+            cursor: pointer;
+        }
+
+        .search-bar select:focus {
+            border-color: #2196F3;
+        }
+
+
 
         .footer {
             display: flex;
@@ -287,13 +366,55 @@
         <div class="day">Sat</div>
     </div>
 
-    <div class="monday-rectangle">
+    <div class="day-rectangle">
         <div class="blue-rectangle">Monday</div>
         <div class="light-blue-rectangle">
             <div id="calories">Calories: </div>
             <div id="steps">Steps: </div>
         </div>
     </div>
+
+    <div class="routine-rectangle">
+        <div class="exercise">
+            <img src="Workout.png" alt="Workout">
+            <a href="exercise1.html" style="color: #2196F3; text-decoration: none;">Exercise 1</a>
+            <p style="color: black;">3 sets x 12 reps</p>
+        </div>
+        <div class="exercise">
+            <img src="Workout.png" alt="Workout">
+            <a href="exercise2.html" style="color: #2196F3; text-decoration: none;">Exercise 2</a>
+            <p style="color: black;">4 sets x 10 reps</p>
+        </div>
+        <div class="exercise">
+            <img src="Workout.png" alt="Workout">
+            <a href="exercise3.html" style="color: #2196F3; text-decoration: none;">Exercise 3</a>
+            <p style="color: black;">5 sets x 8 reps</p>
+        </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="browse-workouts">
+        Browse Workouts
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="search-bar">
+        <form action="search_workouts.php" method="get">
+            <input type="text" name="query" placeholder="Search workouts..." required>
+            <select name="workout_type">
+                <option value="">Select Workout Type</option>
+                <option value="cardio">Cardio</option>
+                <option value="strength">Strength Training</option>
+                <option value="flexibility">Flexibility</option>
+                <option value="balance">Balance</option>
+            </select>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    
+    
 
     <!-- Main content of the page -->
     <main style="padding-top: 20px;">
