@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Workouts</title>
     <style>
         
         body, h1, p {
@@ -327,171 +327,28 @@
 <body>
     <header class="header">
         <div class="header-left">
-            <button class="header-button">Home</button>
+            <a href="index.html" class="header-button">Home</a>
             <a href="workouts.html" class="header-button">Workouts</a>
         </div>
         <div class="header-right">
             <div class="profile" onclick="toggleDropdown()">U</div>
-            <div class="dropdown" id="profileDropdown">
-                <a href="#">Hello, Username</a>
-                <a href="#">Profile</a>
-                <a href="settings.html">Settings</a>
-                <a href="logout.html">Log Out</a>
-            </div>
         </div>
     </header>
 
-    <div class="date" id="current-date"></div>
-    <div class="rectangle">
-        <input type="number" class="number-input" value="0">
-        <div class="button-container">
-            <button class="log-button">Log Steps</button>
-            <button class="log-button">Log Calories</button>
-        </div>
-    </div>
-
-    <div class="spacer"></div>
-
-    <div class="my-routines">
-        My Routines
-    </div>
-
-    <div class="days-of-week">
-        <div class="day">Sun</div>
-        <div class="day">Mon</div>
-        <div class="day">Tue</div>
-        <div class="day">Wed</div>
-        <div class="day">Thu</div>
-        <div class="day">Fri</div>
-        <div class="day">Sat</div>
-    </div>
-
-    <div class="day-rectangle">
-        <div class="blue-rectangle">Monday</div>
-        <div class="light-blue-rectangle">
-            <div id="calories">Calories: </div>
-            <div id="steps">Steps: </div>
-        </div>
-    </div>
-
-    <div class="routine-rectangle">
-        <div class="exercise">
-            <img src="Workout.png" alt="Workout">
-            <a href="exercise1.html" style="color: #2196F3; text-decoration: none;">Exercise 1</a>
-            <p style="color: black;">3 sets x 12 reps</p>
-        </div>
-        <div class="exercise">
-            <img src="Workout.png" alt="Workout">
-            <a href="exercise2.html" style="color: #2196F3; text-decoration: none;">Exercise 2</a>
-            <p style="color: black;">4 sets x 10 reps</p>
-        </div>
-        <div class="exercise">
-            <img src="Workout.png" alt="Workout">
-            <a href="exercise3.html" style="color: #2196F3; text-decoration: none;">Exercise 3</a>
-            <p style="color: black;">5 sets x 8 reps</p>
-        </div>
-    </div>
-
-    <div class="spacer"></div>
-
-    <div class="browse-workouts">
-        Browse Workouts
-    </div>
-
-    <div class="spacer"></div>
-
-    <div class="search-bar">
-        <form action="search_workouts.php" method="get">
-            <input type="text" name="query" placeholder="Search workouts..." required>
-            <select name="workout_type">
-                <option value="">Select Workout Type</option>
-                <option value="cardio">Cardio</option>
-                <option value="strength">Strength Training</option>
-                <option value="flexibility">Flexibility</option>
-                <option value="balance">Balance</option>
-            </select>
-            <button type="submit">Search</button>
-        </form>
-    </div>
-    
-    
-
-    <!-- Main content of the page -->
-    <main style="padding-top: 20px;">
-        <!-- Your content goes here -->
+    <main>
+        <h1>Workouts</h1>
+        <p>Welcome to the workouts page! Here you can find a variety of workout routines to fit your fitness goals.</p>
+        <ul>
+            <li><a href="workout1.html">Cardio Workout</a></li>
+            <li><a href="workout2.html">Strength Training</a></li>
+            <li><a href="workout3.html">Flexibility Exercises</a></li>
+        </ul>
     </main>
 
-    <footer class="footer">
-        <div class="footer-left">
-            <button class="footer-link">About</button>
-            <button class="footer-link">Contact</button>
-        </div>
-        <div class="footer-center">
-            Workout Helper - Capirchio 2024©
-        </div>
+    <footer>
+        <p>Workout Helper - Capirchio 2024©</p>
     </footer>
 
-    <script>
-        // Function to format date as "Day, Month Day, Year"
-        function formatDate(date) {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            return date.toLocaleDateString(undefined, options);
-        }
-
-        // Get today's date and set it in the element with id "current-date"
-        document.getElementById('current-date').textContent = formatDate(new Date());
-
-        // Function to toggle dropdown visibility
-        function toggleDropdown() {
-            const dropdown = document.getElementById('profileDropdown');
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
-        }
-
-        // Close the dropdown if the user clicks outside of it
-        window.onclick = function(event) {
-            if (!event.target.matches('.profile')) {
-                const dropdowns = document.getElementsByClassName('dropdown');
-                for (let i = 0; i < dropdowns.length; i++) {
-                    const openDropdown = dropdowns[i];
-                    if (openDropdown.style.display === 'block') {
-                        openDropdown.style.display = 'none';
-                    }
-                }
-            }
-        }
-
-        // Function to toggle the visibility of the dropdown menu
-        function toggleDropdown() {
-            var dropdown = document.getElementById("profileDropdown");
-            dropdown.style.display = (dropdown.style.display === "none" || dropdown.style.display === "") ? "block" : "none";
-        }
-
-        // Fetch data from server-side script and update the calories and steps
-        async function updateData() {
-            try {
-                // Replace 'get_data.php' with your actual server-side script
-                const response = await fetch('get_data.php'); 
-                const data = await response.json();
-
-                // Extract calories and steps from the response data
-                const calories = data.calories || 'N/A'; // Default to 'N/A' if data is not available
-                const steps = data.steps || 'N/A'; // Default to 'N/A' if data is not available
-
-                // Update the HTML with fetched data
-                document.getElementById('calories').innerText = `Calories: ${calories}`;
-                document.getElementById('steps').innerText = `Steps: ${steps}`;
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                document.getElementById('calories').innerText = 'Calories: Error';
-                document.getElementById('steps').innerText = 'Steps: Error';
-            }
-        }
-
-        // Call updateData on page load to fetch and display the data
-        window.onload = function() {
-            updateData();
-        };
-
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
