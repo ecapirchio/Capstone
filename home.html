@@ -328,25 +328,25 @@
     <header class="header">
         <div class="header-left">
             <button class="header-button">Home</button>
-            <a href="workouts.html" class="header-button">Workouts</a>
+            <a href="workouts.php" class="header-button">Workouts</a>
         </div>
         <div class="header-right">
             <div class="profile" onclick="toggleDropdown()">U</div>
             <div class="dropdown" id="profileDropdown">
-                <a href="#">Hello, Username</a>
+                <a href="#">Hello, <?php echo htmlspecialchars($_SESSION['username']); ?></a>
                 <a href="#">Profile</a>
-                <a href="settings.html">Settings</a>
-                <a href="logout.html">Log Out</a>
+                <a href="settings.php">Settings</a>
+                <a href="logout.php">Log Out</a>
             </div>
         </div>
     </header>
 
     <div class="date" id="current-date"></div>
     <div class="rectangle">
-        <input type="number" class="number-input" value="0">
+        <input type="number" class="number-input" id="steps-input" value="0">
         <div class="button-container">
-            <button class="log-button">Log Steps</button>
-            <button class="log-button">Log Calories</button>
+            <button class="log-button" onclick="logSteps()">Log Steps</button>
+            <button class="log-button" onclick="logCalories()">Log Calories</button>
         </div>
     </div>
 
@@ -377,17 +377,17 @@
     <div class="routine-rectangle">
         <div class="exercise">
             <img src="Workout.png" alt="Workout">
-            <a href="exercise1.html" style="color: #2196F3; text-decoration: none;">Exercise 1</a>
+            <a href="exercise1.php" style="color: #2196F3; text-decoration: none;">Exercise 1</a>
             <p style="color: black;">3 sets x 12 reps</p>
         </div>
         <div class="exercise">
             <img src="Workout.png" alt="Workout">
-            <a href="exercise2.html" style="color: #2196F3; text-decoration: none;">Exercise 2</a>
+            <a href="exercise2.php" style="color: #2196F3; text-decoration: none;">Exercise 2</a>
             <p style="color: black;">4 sets x 10 reps</p>
         </div>
         <div class="exercise">
             <img src="Workout.png" alt="Workout">
-            <a href="exercise3.html" style="color: #2196F3; text-decoration: none;">Exercise 3</a>
+            <a href="exercise3.php" style="color: #2196F3; text-decoration: none;">Exercise 3</a>
             <p style="color: black;">5 sets x 8 reps</p>
         </div>
     </div>
@@ -414,9 +414,6 @@
         </form>
     </div>
     
-    
-
-    <!-- Main content of the page -->
     <main style="padding-top: 20px;">
         <!-- Your content goes here -->
     </main>
@@ -460,24 +457,15 @@
             }
         }
 
-        // Function to toggle the visibility of the dropdown menu
-        function toggleDropdown() {
-            var dropdown = document.getElementById("profileDropdown");
-            dropdown.style.display = (dropdown.style.display === "none" || dropdown.style.display === "") ? "block" : "none";
-        }
-
         // Fetch data from server-side script and update the calories and steps
         async function updateData() {
             try {
-                // Replace 'get_data.php' with your actual server-side script
-                const response = await fetch('get_data.php'); 
+                const response = await fetch('home.php'); 
                 const data = await response.json();
 
-                // Extract calories and steps from the response data
                 const calories = data.calories || 'N/A'; // Default to 'N/A' if data is not available
                 const steps = data.steps || 'N/A'; // Default to 'N/A' if data is not available
 
-                // Update the HTML with fetched data
                 document.getElementById('calories').innerText = `Calories: ${calories}`;
                 document.getElementById('steps').innerText = `Steps: ${steps}`;
             } catch (error) {
@@ -492,6 +480,46 @@
             updateData();
         };
 
+        // Functions to log steps and calories
+        async function logSteps() {
+            const stepsInput = document.getElementById('steps-input').value;
+            try {
+                const response = await fetch('log_steps.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `steps=${stepsInput}`
+                });
+                const result = await response.json();
+                if (result.success) {
+                    updateData(); // Refresh the displayed data
+                } else {
+                    alert('Failed to log steps');
+                }
+            } catch (error) {
+                console.error('Error logging steps:', error);
+                alert('Error logging steps');
+            }
+        }
+
+        async function logCalories() {
+            const caloriesInput = document.getElementById('steps-input').value;
+            try {
+                const response = await fetch('log_calories.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `calories=${caloriesInput}`
+                });
+                const result = await response.json();
+                if (result.success) {
+                    updateData(); // Refresh the displayed data
+                } else {
+                    alert('Failed to log calories');
+                }
+             } catch (error) {
+                console.error('Error logging calories:', error);
+                alert('Error logging calories');
+            }
+        }
     </script>
 </body>
 </html>

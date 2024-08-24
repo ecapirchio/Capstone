@@ -1,21 +1,15 @@
 <?php
-    // Parse the INI configuration file to retrieve database credentials and setting
-    $ini = parse_ini_file(__DIR__ . '/dbconfig.ini');
+$servername = "mysql.neit.edu";
+$port = 5500;
+$username = "capstone_202440_capirchio";
+$password = "008018071";
+$dbname = "capstone_202440_capirchio";
 
-    // Uncomment the following lines for debugging and exit script after dumping INI contents
-    // var_dump($ini);
-    // exit;
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
 
-    // Create a PDO database connection using the retrieved settings from the INI file
-    $db = new PDO(
-        "mysql:host=" . $ini['servername'] .
-        ";port=" . $ini['port'] .
-        ";dbname=" . $ini['dbname'],
-        $ini['username'],
-        $ini['password']
-    );
-
-    // Disable emulated prepared statements for enhanced security
-    $db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error . " - " . $conn->connect_errno);
+}
 ?>

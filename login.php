@@ -1,59 +1,52 @@
 <?php
-/*if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['login'])) {
-        // Login
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        
-        
-        echo "Login button clicked. Username: $username, Password: $password";
-    } elseif (isset($_POST['register'])) {
-        // Register
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-        
-        echo "Register button clicked. Username: $username, Password: $password";
-    }
-}*/
-?>
+session_start();
+include 'db_connect.php'; // Ensure this file path is correct
 
-<?php
-include 'db_connect.php'; // Include the database connection
+// Check if $conn is set
+if (!isset($conn)) {
+    die("Database connection not established.");
+}
 
+// Check if the form was submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['login'])) {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
+    // Check if username and password are set
+    if (isset($_POST['username']) && isset($_POST['password'])) {
+        // Retrieve and sanitize form data
+        $user = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+        $pass = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
-        // Prepare and execute SQL query
-        $sql = "SELECT * FROM users WHERE UName = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $username);
+        // Prepare and execute query
+        $stmt = $conn->prepare("SELECT PW FROM users WHERE UName = ?");
+        if ($stmt === false) {
+            die("Failed to prepare the statement.");
+        }
+
+        $stmt->bind_param("s", $user);
         $stmt->execute();
-        $result = $stmt->get_result();
+        $stmt->store_result();
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $hashed_password = $row['PW'];
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($hashed_password);
+            $stmt->fetch();
 
             // Verify password
-            if (password_verify($password, $hashed_password)) {
-                // Start session and set session variables
-                session_start();
-                $_SESSION['username'] = $username;
-                
-                // Redirect to home.html
+            if (password_verify($pass, $hashed_password)) {
+                $_SESSION['username'] = $user;
                 header("Location: home.html");
-                exit;
+                exit();
             } else {
-                echo "Incorrect password.";
+                echo "Invalid password.";
             }
         } else {
-            echo "No account found with that username.";
+            echo "Username does not exist.";
         }
 
         $stmt->close();
+    } else {
+        echo "Username or password not set.";
     }
+} else {
+    echo "Invalid request method.";
 }
 
 $conn->close();

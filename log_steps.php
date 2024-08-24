@@ -2,13 +2,13 @@
 session_start();
 include 'db_connect.php'; // Ensure this file contains your database connection settings
 
-// Check if user is logged in
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
 
 $username = $_SESSION['username'];
+$steps = $_POST['steps'];
 
 // Get UserID based on the username
 $stmt = $conn->prepare("SELECT UserID FROM users WHERE UName = ?");
@@ -18,21 +18,14 @@ $stmt->bind_result($userID);
 $stmt->fetch();
 $stmt->close();
 
-// Fetch user stats
-$stmt = $conn->prepare("SELECT steps, calories, step_goal FROM user_stats WHERE UserID = ?");
-$stmt->bind_param("i", $userID);
-$stmt->execute();
-$stmt->bind_result($steps, $calories, $step_goal);
-$stmt->fetch();
+// Update steps in the database
+$stmt = $conn->prepare("UPDATE user_stats SET steps = ? WHERE UserID = ?");
+$stmt->bind_param("ii", $steps, $userID);
+$success = $stmt->execute();
 $stmt->close();
-
 $conn->close();
 
-// Output data as JSON for the client-side script
+// Return JSON response
 header('Content-Type: application/json');
-echo json_encode([
-    'steps' => $steps,
-    'calories' => $calories,
-    'step_goal' => $step_goal
-]);
+echo json_encode(['success' => $success]);
 ?>
