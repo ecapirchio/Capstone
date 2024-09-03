@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout Helper - Settings</title>
+    <title>Workout Helper - Admin</title>
     <style>
         body, html {
             margin: 0;
@@ -68,69 +67,27 @@
         .main {
             flex: 1;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .settings-title {
-            color: #2196F3;
-            font-size: 2em;
-            margin: 20px 0;
-        }
-        .form-group {
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 400px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            font-size: 1em;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #F5F5F5;
-        }
-        .form-group button {
-            width: 100%;
-            padding: 10px;
-            font-size: 1.2em;
-            background-color: #4CAF50;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <div class="header-left">
-            <a href="home.html">Home</a>
+            <a href="#">Users</a>
             <a href="#">Workouts</a>
         </div>
         <div class="profile" onclick="toggleDropdown()">U</div>
         <div class="dropdown" id="profileDropdown">
             <a href="#">Hello, Username</a>
-            <a href="profile.html">Profile</a>
-            <a href="settings.html">Settings</a>
+            <a href="profile.php">Profile</a>
+            <a href="settings.php">Settings</a>
             <a href="logout.html">Log Out</a>
         </div>
     </div>
     <div class="main">
-        <h1 class="settings-title">Settings</h1>
-        <form method="POST" action="settings.php">
-            <div class="form-group">
-                <label for="step-goal">Set Your Step Goal:</label>
-                <input type="number" id="step-goal" name="step-goal" placeholder="Enter step goal" required>
-                <button type="submit" name="save-goal">Save Goal</button>
-            </div>
-        </form>
+        <h1>Admin Dashboard</h1>
+        <p>Welcome to the admin dashboard. From here, you can manage users, monitor activities, and adjust application settings.</p>
+        <!-- Add more admin functionalities here -->
     </div>
     <div class="footer">
         <div class="footer-left">
@@ -145,9 +102,14 @@
     <script>
         function toggleDropdown() {
             var dropdown = document.getElementById("profileDropdown");
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+            if (dropdown.style.display === "block") {
+                dropdown.style.display = "none";
+            } else {
+                dropdown.style.display = "block";
+            }
         }
 
+        // Close the dropdown if the user clicks outside of it
         window.onclick = function(event) {
             if (!event.target.matches('.profile')) {
                 var dropdowns = document.getElementsByClassName("dropdown");

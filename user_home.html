@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <style>
-        
         body, h1, p {
             margin: 0;
             padding: 0;
@@ -322,6 +321,7 @@
         .footer-center {
             font-size: 14px;
         }
+        
     </style>
 </head>
 <body>
@@ -333,7 +333,7 @@
         <div class="header-right">
             <div class="profile" onclick="toggleDropdown()">U</div>
             <div class="dropdown" id="profileDropdown">
-                <a href="#">Hello, <?php echo htmlspecialchars($_SESSION['username']); ?></a>
+                <a href="#">Hello, </a>
                 <a href="#">Profile</a>
                 <a href="settings.php">Settings</a>
                 <a href="logout.php">Log Out</a>
@@ -460,11 +460,19 @@
         // Fetch data from server-side script and update the calories and steps
         async function updateData() {
             try {
-                const response = await fetch('home.php'); 
+                const response = await fetch('get_data.php'); 
                 const data = await response.json();
 
-                const calories = data.calories || 'N/A'; // Default to 'N/A' if data is not available
-                const steps = data.steps || 'N/A'; // Default to 'N/A' if data is not available
+                if (data.error) {
+                    // Handle error message
+                    document.getElementById('calories').innerText = 'Calories: Error';
+                    document.getElementById('steps').innerText = 'Steps: Error';
+                    console.error(data.error); // Log the error
+                    return;
+                }
+
+                const calories = data.calories || 'N/A';
+                const steps = data.steps || 'N/A';
 
                 document.getElementById('calories').innerText = `Calories: ${calories}`;
                 document.getElementById('steps').innerText = `Steps: ${steps}`;
@@ -474,6 +482,7 @@
                 document.getElementById('steps').innerText = 'Steps: Error';
             }
         }
+
 
         // Call updateData on page load to fetch and display the data
         window.onload = function() {
@@ -515,7 +524,7 @@
                 } else {
                     alert('Failed to log calories');
                 }
-             } catch (error) {
+            } catch (error) {
                 console.error('Error logging calories:', error);
                 alert('Error logging calories');
             }

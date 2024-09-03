@@ -63,12 +63,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if (empty($error_message)) {
                 createUser($username, $email, $password);
-                header('Location: login.html');
+                header('Location: login.php'); // Redirect to login page
                 exit;
             }
         }
     } elseif (isset($_POST['Cancel'])) {
-        header('Location: login.html');
+        header('Location: login.php'); // Redirect to login page
         exit;
     }
 }
@@ -86,6 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 0;
             height: 100%;
             font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
         }
         .container {
             display: flex;
@@ -99,49 +100,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
         .right {
             background-color: white;
             flex: 1;
         }
         .title {
-            font-size: 3em; /* Increased font size */
-            margin-bottom: 30px; /* Increased margin */
+            font-size: 2.5em;
+            margin-bottom: 20px;
         }
         .form-group {
-            margin-bottom: 20px; /* Increased margin */
+            margin-bottom: 20px;
             width: 100%;
-            max-width: 400px; /* Increased width */
+            max-width: 400px;
         }
         .form-group label {
             display: block;
-            margin-bottom: 10px; /* Increased margin */
-            font-size: 1.5em; /* Increased font size */
+            margin-bottom: 10px;
+            font-size: 1.2em;
         }
         .form-group input {
             width: 100%;
-            padding: 15px; /* Increased padding */
-            font-size: 1.2em; /* Increased font size */
+            padding: 10px;
+            font-size: 1em;
             border: 1px solid #ccc;
             border-radius: 5px;
-            background-color: #F5F5F5;
+            background-color: #fff;
         }
         .form-group button {
             width: 100%;
-            padding: 15px; /* Increased padding */
-            font-size: 1.5em; /* Increased font size */
+            padding: 10px;
+            font-size: 1em;
             background-color: #4CAF50;
             border: none;
             border-radius: 5px;
             color: white;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 10px;
         }
-
+        .form-group button.cancel {
+            background-color: #f44336;
+        }
         .error-message {
             color: red;
             margin-bottom: 20px;
-        }   
+        }
     </style>
 </head>
 <body>
@@ -167,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="form-group">
                     <button type="submit" name="Register">Register</button>
-                    <button type="submit" name="Cancel">Cancel</button>
+                    <button type="submit" name="Cancel" class="cancel">Cancel</button>
                 </div>
             </form>
         </div>

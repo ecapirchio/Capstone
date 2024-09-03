@@ -1,31 +1,30 @@
 <?php
-session_start();
-include 'db_connect.php'; // Ensure this file contains your database connection settings
+// log_steps.php
 
-if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
+header('Content-Type: application/json');
+
+$servername = "mysql.neit.edu";
+$username = "capstone_202440_capirchio";
+$password = "008018071";
+$dbname = "capstone_202440_capirchio";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
     exit();
 }
 
-$username = $_SESSION['username'];
-$steps = $_POST['steps'];
+$steps = intval($_POST['steps']);
 
-// Get UserID based on the username
-$stmt = $conn->prepare("SELECT UserID FROM users WHERE UName = ?");
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$stmt->bind_result($userID);
-$stmt->fetch();
-$stmt->close();
-
-// Update steps in the database
-$stmt = $conn->prepare("UPDATE user_stats SET steps = ? WHERE UserID = ?");
-$stmt->bind_param("ii", $steps, $userID);
+$sql = "UPDATE user_stats SET steps = steps + ? WHERE UserID = ?"; // Replace ? with the actual user ID
+$stmt = $conn->prepare($sql);
+$stmt->bind_param('ii', $steps, $userId); // Replace $userId with the actual user ID
+$userId = 1; // For example purposes, set this to the current user's ID
 $success = $stmt->execute();
+
+echo json_encode(['success' => $success]);
+
 $stmt->close();
 $conn->close();
-
-// Return JSON response
-header('Content-Type: application/json');
-echo json_encode(['success' => $success]);
 ?>

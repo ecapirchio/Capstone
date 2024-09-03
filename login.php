@@ -31,14 +31,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Verify password
             if (password_verify($pass, $hashed_password)) {
+                // Store user details in session
                 $_SESSION['username'] = $user;
-                header("Location: home.html");
+
+                // Regenerate session ID to prevent session fixation
+                session_regenerate_id(true);
+
+                // Redirect to the user home page or a default page
+                header("Location: user_home.php");
                 exit();
             } else {
                 echo "Invalid password.";
             }
         } else {
-            echo "Username does not exist.";
+            echo "Invalid username.";
         }
 
         $stmt->close();
