@@ -3,12 +3,9 @@
 
 header('Content-Type: application/json');
 
-$servername = "mysql.neit.edu";
-$username = "capstone_202440_capirchio";
-$password = "008018071";
-$dbname = "capstone_202440_capirchio";
+include 'db_connect.php'; 
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname, $port);
 
 if ($conn->connect_error) {
     echo json_encode(['error' => 'Database connection failed']);

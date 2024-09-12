@@ -37,6 +37,45 @@ if ($stmt->fetch() === false) {
 }
 
 $stmt->close();
+
+// Handle workout search
+$searchResults = [];
+if (isset($_GET['query']) || isset($_GET['workout_type'])) {
+    $query = $_GET['query'] ?? '';
+    $workoutType = $_GET['workout_type'] ?? '';
+
+    $searchQuery = "SELECT * FROM workouts WHERE WorkoutName LIKE ?";
+
+    if ($workoutType !== '') {
+        $searchQuery .= " AND WorkoutType = ?";
+        $stmt = $conn->prepare($searchQuery);
+        if ($stmt === false) {
+            die("Failed to prepare the statement.");
+        }
+        $paramType = 'ss';
+        $paramValue = "%$query%";
+        $stmt->bind_param($paramType, $paramValue, $workoutType);
+    } else {
+        $stmt = $conn->prepare($searchQuery);
+        if ($stmt === false) {
+            die("Failed to prepare the statement.");
+        }
+        $paramType = 's';
+        $paramValue = "%$query%";
+        $stmt->bind_param($paramType, $paramValue);
+    }
+
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    while ($row = $result->fetch_assoc()) {
+        $searchResults[] = $row;
+    }
+
+    $stmt->close();
+}
+
+// Close the database connection
 $conn->close();
 
 // Output data as JSON for the client-side script
@@ -44,6 +83,7 @@ header('Content-Type: application/json');
 echo json_encode([
     'steps' => $steps,
     'calories' => $calories,
-    'step_goal' => $step_goal
+    'step_goal' => $step_goal,
+    'searchResults' => $searchResults
 ]);
 ?>

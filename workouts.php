@@ -6,6 +6,9 @@ $username = "capstone_202440_capirchio";
 $password = "008018071";
 $database = "capstone_202440_capirchio";
 
+// For testing purposes, set UserID manually
+$userId = 1;
+
 $conn = new mysqli($servername, $username, $password, $database, $port);
 
 // Check connection
@@ -13,17 +16,35 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch workouts
-$sql = "SELECT WorkoutID, WorkoutName, Description FROM workouts";
-$result = $conn->query($sql);
+// Fetch workouts assigned to the user
+$sqlAssigned = "SELECT w.WorkoutID, w.WorkoutName, w.Descript
+                FROM workouts w
+                JOIN user_stats us ON w.WorkoutID = us.WorkoutID
+                WHERE us.UserID = ?";
+$stmtAssigned = $conn->prepare($sqlAssigned);
+$stmtAssigned->bind_param("i", $userId);
+$stmtAssigned->execute();
+$resultAssigned = $stmtAssigned->get_result();
 
-$workouts = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $workouts[] = $row;
+$assignedWorkouts = [];
+if ($resultAssigned->num_rows > 0) {
+    while ($row = $resultAssigned->fetch_assoc()) {
+        $assignedWorkouts[] = $row;
     }
 }
 
+// Fetch all workouts
+$sqlAll = "SELECT WorkoutID, WorkoutName, Descript FROM workouts";
+$resultAll = $conn->query($sqlAll);
+
+$allWorkouts = [];
+if ($resultAll->num_rows > 0) {
+    while ($row = $resultAll->fetch_assoc()) {
+        $allWorkouts[] = $row;
+    }
+}
+
+$stmtAssigned->close();
 $conn->close();
 ?>
 <!DOCTYPE html>
@@ -117,11 +138,11 @@ $conn->close();
 <body>
     <header class="header">
         <div class="header-left">
-            <a href="admin_home.php" class="header-button">Home</a>
+            <a href="user_home.html" class="header-button">Home</a>
             <a href="workouts.php" class="header-button">Workouts</a>
         </div>
         <div class="header-right">
-            <div class="profile" onclick="toggleDropdown()">U</div>
+            <div class="profile" onclick="toggleDropdown()">EC</div>
             <div class="dropdown" id="profileDropdown">
                 <a href="#">Hello, <?php echo htmlspecialchars($_SESSION['username']); ?></a>
                 <a href="#">Profile</a>
@@ -132,13 +153,31 @@ $conn->close();
     </header>
 
     <div class="workout-list">
-        <h1>Available Workouts</h1>
-        <?php foreach ($workouts as $workout): ?>
-            <div class="workout-item">
-                <h3><?php echo htmlspecialchars($workout['WorkoutName']); ?> (ID: <?php echo htmlspecialchars($workout['WorkoutID']); ?>)</h3>
-                <p><?php echo htmlspecialchars($workout['Description']); ?></p>
-            </div>
-        <?php endforeach; ?>
+        <h1>My Workouts</h1>
+        <?php if (count($assignedWorkouts) > 0): ?>
+            <?php foreach ($assignedWorkouts as $workout): ?>
+                <div class="workout-item">
+                    <h3><?php echo htmlspecialchars($workout['WorkoutName']); ?> (ID: <?php echo htmlspecialchars($workout['WorkoutID']); ?>)</h3>
+                    <p><?php echo htmlspecialchars($workout['Descript']); ?></p>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No workouts assigned.</p>
+        <?php endif; ?>
+    </div>
+
+    <div class="workout-list">
+        <h1>All Workouts</h1>
+        <?php if (count($allWorkouts) > 0): ?>
+            <?php foreach ($allWorkouts as $workout): ?>
+                <div class="workout-item">
+                    <h3><?php echo htmlspecialchars($workout['WorkoutName']); ?> (ID: <?php echo htmlspecialchars($workout['WorkoutID']); ?>)</h3>
+                    <p><?php echo htmlspecialchars($workout['Descript']); ?></p>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No workouts available.</p>
+        <?php endif; ?>
     </div>
 
     <script>
