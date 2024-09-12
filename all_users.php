@@ -1,3 +1,13 @@
+<?php
+session_start();
+include 'db_connect.php'; // Include the database connection
+
+// Fetch all users
+$sql = "SELECT UserID, UName, PW, Email FROM users";
+$result = $conn->query($sql);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,15 +15,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <style>
-        /* Styles from your existing pages */
-        body, html {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
         .header, .footer {
             display: flex;
@@ -83,52 +89,38 @@
         .dropdown a:hover {
             background: #f1f1f1;
         }
-        .main {
-            flex: 1;
-            padding: 20px;
-            margin-top: 60px; /* To avoid content overlap with the fixed header */
-            margin-bottom: 60px; /* To avoid content overlap with the fixed footer */
-        }
-        form {
+        .container {
             background: white;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            max-width: 400px;
-            margin: auto;
+            width: 90%;
+            max-width: 1200px;
+            margin: 80px auto 60px;
         }
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-        select, button {
+        table {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 20px;
+            border-collapse: collapse;
         }
-        button {
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
             background-color: #2196F3;
             color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 1em;
-        }
-        button:hover {
-            background-color: #1976D2;
         }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-left">
-            <a href='admin_dashboard.php' class="header-button">Home</a>
-            <a href="admin_addWorkout.php" class="header-button">Add Workouts</a>
-            <a href="all_users.php" class="header-button">Users</a>
+            <a href="admin_dashboard.php" class="header-button">Home</a>
+            <a href="admin_addWorkout.php" class="header-button">Workouts</a>
         </div>
         <div class="header-right">
-            <div class="profile" onclick="toggleDropdown()">U</div>
+            <div class="profile" onclick="toggleDropdown()">EC</div>
             <div class="dropdown" id="profileDropdown">
                 <a href="#">Hello, </a>
                 <a href="#">Profile</a>
@@ -138,31 +130,36 @@
         </div>
     </header>
 
-    <div class="main">
-        <h1>Admin Dashboard</h1>
-        <form action="admin_dashboard.php" method="post">
-            <label for="user_id">Select User:</label>
-            <select id="user_id" name="user_id" required>
-                <option value="">--Select User--</option>
-                <?php foreach ($users as $user): ?>
-                    <option value="<?php echo htmlspecialchars($user['UserID']); ?>">
-                        <?php echo htmlspecialchars($user['UName']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <label for="workout_id">Select Workout:</label>
-            <select id="workout_id" name="workout_id" required>
-                <option value="">--Select Workout--</option>
-                <?php foreach ($workouts as $workout): ?>
-                    <option value="<?php echo htmlspecialchars($workout['WorkoutID']); ?>">
-                        <?php echo htmlspecialchars($workout['WorkoutName']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <button type="submit">Add Workout to User</button>
-        </form>
+    <div class="container">
+        <h1>Users List</h1>
+        <?php
+        if ($result->num_rows > 0) {
+            echo "<table>
+                    <thead>
+                        <tr>
+                            <th>UserID</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+            // Output data of each row
+            while($row = $result->fetch_assoc()) {
+                echo "<tr>
+                        <td>" . htmlspecialchars($row["UserID"]) . "</td>
+                        <td>" . htmlspecialchars($row["UName"]) . "</td>
+                        <td>" . htmlspecialchars($row["PW"]) . "</td>
+                        <td>" . htmlspecialchars($row["Email"]) . "</td>
+                      </tr>";
+            }
+            echo "  </tbody>
+                  </table>";
+        } else {
+            echo "<p>No users found.</p>";
+        }
+        $conn->close();
+        ?>
     </div>
 
     <footer class="footer">

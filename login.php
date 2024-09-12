@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 session_regenerate_id(true);
 
                 // Redirect to the user home page or a default page
-                header("Location: user_home.php");
+                header("Location: user_home.html");
                 exit();
             } else {
                 echo "Invalid password.";

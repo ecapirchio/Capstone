@@ -63,7 +63,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user']) && isset($_POS
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Workout</title>
     <style>
-        /* Existing CSS styles */
         body, html {
             margin: 0;
             padding: 0;
@@ -164,7 +163,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user']) && isset($_POS
     <header class="header">
         <div class="header-left">
             <a href="user_home.php">Home</a>
-            <a href="workouts.php">Workouts</a>
         </div>
         <div class="header-right">
             <div class="profile" onclick="toggleDropdown()">U</div>
