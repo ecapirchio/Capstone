@@ -1,3 +1,54 @@
+<?php
+session_start(); // Ensure session management for admin login
+include 'db_connect.php'; // Ensure this file path is correct
+
+if (!isset($conn)) {
+    die("Database connection not established.");
+}
+
+// Fetch all users
+$sql = "SELECT UserID, UName FROM users";
+$result = $conn->query($sql);
+
+$users = [];
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $users[] = $row;
+    }
+}
+
+// Fetch all workouts
+$sql = "SELECT WorkoutID, WorkoutName FROM workouts";
+$result = $conn->query($sql);
+
+$workouts = [];
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $workouts[] = $row;
+    }
+}
+
+// Handle adding a workout to a user's list
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_id']) && isset($_POST['workout_id'])) {
+    $user_id = intval($_POST['user_id']);
+    $workout_id = intval($_POST['workout_id']);
+
+    // Prepare statement to avoid SQL injection
+    $stmt = $conn->prepare("INSERT INTO user_stats (UserID, WorkoutID) VALUES (?, ?)");
+    $stmt->bind_param("ii", $user_id, $workout_id);
+
+    if ($stmt->execute()) {
+        echo "Workout added successfully.";
+    } else {
+        echo "Error: " . $stmt->error;
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,48 +56,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <style>
-        /* Styles from your existing pages */
         body, html {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            min-height: 100vh;
+            background-color: #f5f5f5;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
         }
-        .header, .footer {
+        .header {
+            background-color: #2196F3;
+            color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #2196F3;
-            color: white;
-            padding: 10px;
-            position: fixed;
-            width: 100%;
-            z-index: 1000;
+            padding: 10px 20px;
+            position: relative; /* Ensure dropdown is positioned relative to the header */
         }
-        .header {
-            top: 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .footer {
-            bottom: 0;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .header-left, .footer-left {
+        .header-left {
             display: flex;
+            gap: 20px;
         }
-        .header-button, .footer-link {
-            background: none;
-            border: none;
+        .header-left a {
             color: white;
-            font-size: 16px;
-            margin-right: 15px;
-            cursor: pointer;
+            text-decoration: none;
+            font-size: 1.5em;
         }
-        .header-button:hover, .footer-link:hover {
-            text-decoration: underline;
+        .header-right {
+            position: relative; /* Ensure dropdown is positioned relative to this element */
         }
         .profile {
             background: #fff;
@@ -60,8 +98,6 @@
             justify-content: center;
             font-size: 18px;
             cursor: pointer;
-            margin-left: auto;
-            margin-right: 20px;
         }
         .dropdown {
             display: none;
@@ -73,6 +109,7 @@
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             width: 150px;
+            z-index: 1000;
         }
         .dropdown a {
             display: block;
@@ -86,8 +123,6 @@
         .main {
             flex: 1;
             padding: 20px;
-            margin-top: 60px; /* To avoid content overlap with the fixed header */
-            margin-bottom: 60px; /* To avoid content overlap with the fixed footer */
         }
         form {
             background: white;
@@ -118,17 +153,26 @@
         button:hover {
             background-color: #1976D2;
         }
+        .footer {
+            background-color: #2196F3;
+            color: white;
+            text-align: center;
+            padding: 10px 20px;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
     <header class="header">
         <div class="header-left">
-            <a href='admin_dashboard.php' class="header-button">Home</a>
-            <a href="admin_addWorkout.php" class="header-button">Add Workouts</a>
-            <a href="all_users.php" class="header-button">Users</a>
+            <a href="admin_dashboard.php">Admin Dashboard</a>
+            <a href="admin_addWorkout.php">Add Workouts</a>
+            <a href="all_users.php">Users</a>
         </div>
         <div class="header-right">
-            <div class="profile" onclick="toggleDropdown()">U</div>
+            <div class="profile" onclick="toggleDropdown()">EC</div>
             <div class="dropdown" id="profileDropdown">
                 <a href="#">Hello, </a>
                 <a href="#">Profile</a>
@@ -166,13 +210,7 @@
     </div>
 
     <footer class="footer">
-        <div class="footer-left">
-            <button class="footer-link">About</button>
-            <button class="footer-link">Contact</button>
-        </div>
-        <div class="footer-center">
-            Workout Helper - Capirchio 2024©
-        </div>
+        Workout Helper - Capirchio 2024©
     </footer>
 
     <script>
@@ -183,13 +221,10 @@
 
         // Close the dropdown if the user clicks outside of it
         window.onclick = function(event) {
+            const dropdown = document.getElementById('profileDropdown');
             if (!event.target.matches('.profile')) {
-                const dropdowns = document.getElementsByClassName('dropdown');
-                for (let i = 0; i < dropdowns.length; i++) {
-                    const openDropdown = dropdowns[i];
-                    if (openDropdown.style.display === 'block') {
-                        openDropdown.style.display = 'none';
-                    }
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
                 }
             }
         }

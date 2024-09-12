@@ -139,7 +139,6 @@ $result = $conn->query($sql);
                         <tr>
                             <th>UserID</th>
                             <th>Username</th>
-                            <th>Password</th>
                             <th>Email</th>
                         </tr>
                     </thead>
@@ -149,7 +148,6 @@ $result = $conn->query($sql);
                 echo "<tr>
                         <td>" . htmlspecialchars($row["UserID"]) . "</td>
                         <td>" . htmlspecialchars($row["UName"]) . "</td>
-                        <td>" . htmlspecialchars($row["PW"]) . "</td>
                         <td>" . htmlspecialchars($row["Email"]) . "</td>
                       </tr>";
             }

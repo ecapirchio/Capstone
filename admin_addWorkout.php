@@ -30,8 +30,12 @@
             bottom: 0;
             box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
         }
-        .header-left, .footer-left {
+        .footer-left {
             display: flex;
+        }
+        .header-left {
+            display: flex;
+            gap: 20px;
         }
         .header-button, .footer-link {
             background: none;
@@ -158,14 +162,12 @@
     <?php
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
+    include 'db_connect.php';
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $servername = "mysql.neit.edu";
-        $username = "capstone_202440_capirchio";
-        $password = "008018071";
-        $dbname = "capstone_202440_capirchio";
 
-        $conn = new mysqli($servername, $username, $password, $dbname);
+        $conn = new mysqli($servername, $username, $password, $dbname, $port);
+        var_dump($conn);
 
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
