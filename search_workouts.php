@@ -5,33 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Workouts</title>
     <style>
-        body, h1, p {
+        html, body, h1, p {
             margin: 0;
             padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
         }
 
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            padding-bottom: 60px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
         }
 
         .header {
+            background-color: #2196F3;
+            color: white;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #2196F3;
-            padding: 10px;
-            position: fixed;
-            top: 0;
+            padding: 10px 20px;
             width: 100%;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
             z-index: 1000;
         }
 
         .header-left {
             display: flex;
+            gap: 20px;
         }
 
         .header-button {
@@ -39,18 +48,12 @@
             border: none;
             color: white;
             font-size: 16px;
-            margin-right: 15px;
             cursor: pointer;
+            margin-right: 15px;
         }
 
         .header-button:hover {
             text-decoration: underline;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            position: relative;
         }
 
         .profile {
@@ -95,7 +98,7 @@
 
         .search-bar {
             text-align: center;
-            margin: 20px;
+            margin: 80px 20px 20px;
         }
 
         .search-bar form {
@@ -103,11 +106,14 @@
             margin-top: 10px;
         }
 
-        .search-bar input[type="text"] {
+        .search-bar input[type="text"], .search-bar select {
             font-size: 16px;
             padding: 8px;
             border: 2px solid #ddd;
             border-radius: 4px;
+        }
+
+        .search-bar input[type="text"] {
             width: 300px;
         }
 
@@ -123,19 +129,6 @@
 
         .search-bar button:hover {
             background-color: #1976D2;
-        }
-
-        .search-bar select {
-            font-size: 16px;
-            padding: 8px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-
-        .search-bar select:focus {
-            border-color: #2196F3;
         }
 
         .result-container {
@@ -170,7 +163,7 @@
         <div class="header-right">
             <div class="profile" onclick="toggleDropdown()">P</div>
             <div class="dropdown" id="profileDropdown">
-                <a href="#">Hello, </a>
+                <a href="#">Hello</a>
                 <a href="#">Profile</a>
                 <a href="settings.php">Settings</a>
                 <a href="logout.php">Log Out</a>
@@ -178,92 +171,79 @@
         </div>
     </header>
 
-    <div class="search-bar">
-        <form action="search_workouts.php" method="get">
-            <input type="text" name="query" placeholder="Search workouts..." required>
-            <select name="workout_type">
-                <option value="">Select Workout Type</option>
-                <option value="cardio">Cardio</option>
-                <option value="strength">Strength Training</option>
-                <option value="flexibility">Flexibility</option>
-                <option value="balance">Balance</option>
-            </select>
-            <button type="submit">Search</button>
-        </form>
-    </div>
+    <div class="main-content">
+        <div class="search-bar">
+            <form action="search_workouts.php" method="get">
+                <input type="text" name="query" placeholder="Search workouts..." required>
+                <select name="workout_type">
+                    <option value="">Select Workout Type</option>
+                    <option value="cardio">Cardio</option>
+                    <option value="strength">Strength Training</option>
+                    <option value="flexibility">Flexibility</option>
+                    <option value="balance">Balance</option>
+                </select>
+                <button type="submit">Search</button>
+            </form>
+        </div>
     
-    <main class="result-container">
-        <?php
-        
-        $servername = "mysql.neit.edu";
-        $port = 5500;
-        $username = "capstone_202440_capirchio";
-        $password = "008018071";
-        $dbname = "capstone_202440_capirchio";
+        <main class="result-container">
+            <?php
+            $servername = "mysql.neit.edu";
+            $port = 5500;
+            $username = "capstone_202440_capirchio";
+            $password = "008018071";
+            $dbname = "capstone_202440_capirchio";
 
-        $conn = new mysqli($servername, $username, $password, $dbname, $port);
+            $conn = new mysqli($servername, $username, $password, $dbname, $port);
 
-        
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
-        $query = isset($_GET['query']) ? $_GET['query'] : '';
-        $workout_type = isset($_GET['workout_type']) ? $_GET['workout_type'] : '';
-
-        
-        $sql = "SELECT * FROM workouts WHERE WorkoutName LIKE ?";
-
-        if (!empty($workout_type)) {
-            $sql .= " AND WorkoutType = ?";
-        }
-
-        $stmt = $conn->prepare($sql);
-
-        if (!empty($workout_type)) {
-            $search_query = "%$query%";
-            $stmt->bind_param("ss", $search_query, $workout_type);
-        } else {
-            $search_query = "%$query%";
-            $stmt->bind_param("s", $search_query);
-        }
-
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                echo "<div class='result-item'>";
-                echo "<h2>" . htmlspecialchars($row['WorkoutName']) . "</h2>";
-                echo "<p>" . htmlspecialchars($row['Descript']) . "</p>";
-                echo "</div>";
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
             }
-        } else {
-            echo "<p>No results found</p>";
-        }
 
-        $stmt->close();
-        $conn->close();
-        ?>
-    </main>
+            $query = isset($_GET['query']) ? $_GET['query'] : '';
+            $workout_type = isset($_GET['workout_type']) ? $_GET['workout_type'] : '';
 
-    <footer class="footer">
-        <div class="footer-left">
-            <button class="footer-link">About</button>
-            <button class="footer-link">Contact</button>
-        </div>
-        <div class="footer-center">
-            Workout Helper - Capirchio 2024©
-        </div>
-    </footer>
+            $sql = "SELECT * FROM workouts WHERE WorkoutName LIKE ?";
+
+            if (!empty($workout_type)) {
+                $sql .= " AND WorkoutType = ?";
+            }
+
+            $stmt = $conn->prepare($sql);
+
+            if (!empty($workout_type)) {
+                $search_query = "%$query%";
+                $stmt->bind_param("ss", $search_query, $workout_type);
+            } else {
+                $search_query = "%$query%";
+                $stmt->bind_param("s", $search_query);
+            }
+
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<div class='result-item'>";
+                    echo "<h2>" . htmlspecialchars($row['WorkoutName']) . "</h2>";
+                    echo "<p>" . htmlspecialchars($row['Descript']) . "</p>";
+                    echo "</div>";
+                }
+            } else {
+                echo "<p>No results found</p>";
+            }
+
+            $stmt->close();
+            $conn->close();
+            ?>
+        </main>
+    </div>
 
     <script>
-        
         function toggleDropdown() {
             const dropdown = document.getElementById('profileDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         }
-
         
         window.onclick = function(event) {
             if (!event.target.matches('.profile')) {

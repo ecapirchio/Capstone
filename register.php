@@ -1,75 +1,3 @@
-<?php
-session_start();
-require 'db_connect.php';
-
-$error_message = "";
-
-function findUserByUsername($username) {
-    global $conn;
-    $stmt = $conn->prepare("SELECT * FROM users WHERE UName = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stmt->close();
-    return $result->fetch_assoc();
-}
-
-function findUserByEmail($email) {
-    global $conn;
-    $stmt = $conn->prepare("SELECT * FROM users WHERE Email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $stmt->close();
-    return $result->fetch_assoc();
-}
-
-function createUser($username, $email, $password) {
-    global $conn;
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $conn->prepare("INSERT INTO users (UName, Email, PW) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $email, $hashed_password);
-    $stmt->execute();
-    $stmt->close();
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['Register'])) {
-        $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
-        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
-
-        
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error_message .= "Invalid email format. ";
-        }
-
-        if (empty($username) || empty($email) || empty($password)) {
-            $error_message .= "Username, Email, and Password are required. ";
-        } else {
-            $existingUser = findUserByUsername($username);
-            $existingEmail = findUserByEmail($email);
-
-            if ($existingUser) {
-                $error_message .= "Username already exists. ";
-            }
-            if ($existingEmail) {
-                $error_message .= "Email already exists. ";
-            }
-
-            if (empty($error_message)) {
-                createUser($username, $email, $password);
-                header('Location: login.php');
-                exit;
-            }
-        }
-    } elseif (isset($_POST['Cancel'])) {
-        header('Location: login.php');
-        exit;
-    }
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             height: 100%;
         }
         .left {
-            background-color: #2196F3;
+            background-color: #242424;
             color: white;
             flex: 1;
             display: flex;
@@ -99,8 +27,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 20px;
         }
         .right {
-            background-color: white;
+            position: relative;
             flex: 1;
+            background: url('NickBackground.jpeg') no-repeat center center;
+            background-size: cover;
+        }
+        .right::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
         }
         .title {
             font-size: 2.5em;
@@ -143,6 +82,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin-bottom: 20px;
         }
     </style>
+    <script>
+        // Redirect to login.html when Cancel button is clicked
+        function cancelRegistration() {
+            window.location.href = 'login.html';
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -167,7 +112,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
                 <div class="form-group">
                     <button type="submit" name="Register">Register</button>
-                    <button type="submit" name="Cancel" class="cancel">Cancel</button>
+                    <!-- Cancel button that triggers JavaScript function to redirect -->
+                    <button type="button" class="cancel" onclick="cancelRegistration()">Cancel</button>
                 </div>
             </form>
         </div>

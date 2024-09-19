@@ -167,7 +167,7 @@ $conn->close();
 <body>
     <div class="header">
         <div class="header-left">
-            <a href="home.html">Home</a>
+            <a href="user_home.html">Home</a>
             <a href="#">Workouts</a>
         </div>
         <div class="profile" onclick="toggleDropdown()">U</div>
