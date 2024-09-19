@@ -13,10 +13,10 @@ if ($conn->connect_error) {
 
 $calories = intval($_POST['calories']);
 
-$sql = "UPDATE user_stats SET calories = calories + ? WHERE UserID = ?"; // Replace ? with the actual user ID
+$sql = "UPDATE user_stats SET calories = calories + ? WHERE UserID = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('ii', $calories, $userId); // Replace $userId with the actual user ID
-$userId = 1; // For example purposes, set this to the current user's ID
+$stmt->bind_param('ii', $calories, $userId);
+$userId = 1;
 $success = $stmt->execute();
 
 echo json_encode(['success' => $success]);

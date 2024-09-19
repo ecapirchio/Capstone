@@ -173,7 +173,7 @@
             die("Connection failed: " . $conn->connect_error);
         }
 
-        // Use AUTO_INCREMENT for WorkoutID to handle primary key automatically
+       
         $stmt = $conn->prepare("INSERT INTO workouts (WorkoutName, Descript) VALUES (?, ?)");
         if (!$stmt) {
             die("Prepare failed: " . $conn->error);
@@ -211,7 +211,7 @@
 
         }
 
-        // Close the dropdown if the user clicks outside of it
+        
         window.onclick = function(event) {
             if (!event.target.matches('.profile')) {
                 const dropdowns = document.getElementsByClassName('dropdown');

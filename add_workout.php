@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'db_connect.php'; // Ensure this file path is correct
+include 'db_connect.php';
 
 if (!isset($conn)) {
     die("Database connection not established.");
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user']) && isset($_POS
     $calories = $_POST['calories'];
     $step_goal = $_POST['step_goal'];
 
-    // Fetch UserID from users table
+
     $stmt = $conn->prepare("SELECT UserID FROM users WHERE UName = ?");
     $stmt->bind_param("s", $user);
     $stmt->execute();
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user']) && isset($_POS
     $stmt->close();
 
     if ($userID) {
-        // Fetch WorkoutID from workouts table
+        
         $stmt = $conn->prepare("SELECT WorkoutID FROM workouts WHERE WorkoutName = ?");
         $stmt->bind_param("s", $workout);
         $stmt->execute();
@@ -33,7 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user']) && isset($_POS
         $stmt->close();
 
         if ($workoutID) {
-            // Insert into user_stats
+            
             $stmt = $conn->prepare("INSERT INTO user_stats (UserID, WorkoutID, Date, Duration, Steps, Calories, StepGoal)
                                     VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->bind_param("iissiii", $userID, $workoutID, $date, $duration, $steps, $calories, $step_goal);

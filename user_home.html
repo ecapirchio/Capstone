@@ -415,7 +415,7 @@
     </div>
     
     <main style="padding-top: 20px;">
-        <!-- Your content goes here -->
+        
     </main>
 
     <footer class="footer">
@@ -429,22 +429,22 @@
     </footer>
 
     <script>
-        // Function to format date as "Day, Month Day, Year"
+        
         function formatDate(date) {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString(undefined, options);
         }
 
-        // Get today's date and set it in the element with id "current-date"
+        
         document.getElementById('current-date').textContent = formatDate(new Date());
 
-        // Function to toggle dropdown visibility
+        
         function toggleDropdown() {
             const dropdown = document.getElementById('profileDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Close the dropdown if the user clicks outside of it
+        
         window.onclick = function(event) {
             if (!event.target.matches('.profile')) {
                 const dropdowns = document.getElementsByClassName('dropdown');
@@ -457,17 +457,17 @@
             }
         }
 
-        // Fetch data from server-side script and update the calories and steps
+        
         async function updateData() {
             try {
                 const response = await fetch('get_data.php'); 
                 const data = await response.json();
 
                 if (data.error) {
-                    // Handle error message
+                    
                     document.getElementById('calories').innerText = 'Calories: Error';
                     document.getElementById('steps').innerText = 'Steps: Error';
-                    console.error(data.error); // Log the error
+                    console.error(data.error);
                     return;
                 }
 
@@ -484,12 +484,12 @@
         }
 
 
-        // Call updateData on page load to fetch and display the data
+        
         window.onload = function() {
             updateData();
         };
 
-        // Functions to log steps and calories
+        
         async function logSteps() {
             const stepsInput = document.getElementById('steps-input').value;
             try {
@@ -500,7 +500,7 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    updateData(); // Refresh the displayed data
+                    updateData();
                 } else {
                     alert('Failed to log steps');
                 }
@@ -520,7 +520,7 @@
                 });
                 const result = await response.json();
                 if (result.success) {
-                    updateData(); // Refresh the displayed data
+                    updateData();
                 } else {
                     alert('Failed to log calories');
                 }

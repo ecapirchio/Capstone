@@ -1,8 +1,8 @@
 <?php
 session_start();
-include 'db_connect.php'; // Include the database connection
+include 'db_connect.php';
 
-// Fetch all users
+
 $sql = "SELECT UserID, UName, PW, Email FROM users";
 $result = $conn->query($sql);
 
@@ -143,7 +143,7 @@ $result = $conn->query($sql);
                         </tr>
                     </thead>
                     <tbody>";
-            // Output data of each row
+            
             while($row = $result->fetch_assoc()) {
                 echo "<tr>
                         <td>" . htmlspecialchars($row["UserID"]) . "</td>
@@ -176,7 +176,7 @@ $result = $conn->query($sql);
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Close the dropdown if the user clicks outside of it
+        
         window.onclick = function(event) {
             if (!event.target.matches('.profile')) {
                 const dropdowns = document.getElementsByClassName('dropdown');

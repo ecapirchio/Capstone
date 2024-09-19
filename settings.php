@@ -1,21 +1,59 @@
 <?php
+session_start();
+include 'db_connect.php';
+
+if (!isset($conn)) {
+    die("Database connection not established.");
+}
+
+
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save-goal'])) {
-    // Process the step goal here
+    
     $stepGoal = filter_input(INPUT_POST, 'step-goal', FILTER_SANITIZE_NUMBER_INT);
 
-    // Validate and process the step goal
+   
     if ($stepGoal > 0) {
-        // Example: save the step goal to a database or session
-        // Ensure you have proper database connection and update logic here
+        
+        $username = $_SESSION['username'];
 
-        // Redirect to home.php after saving the goal
-        header("Location: home.php");
-        exit();
+        
+        $stmt = $conn->prepare("SELECT UserID FROM users WHERE UName = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $stmt->bind_result($userID);
+        $stmt->fetch();
+        $stmt->close();
+
+        if ($userID) {
+            
+            $stmt = $conn->prepare("UPDATE user_stats SET step_goal = ? WHERE UserID = ?");
+            $stmt->bind_param("ii", $stepGoal, $userID);
+
+            if ($stmt->execute()) {
+                
+                header("Location: user_home.php");
+                exit();
+            } else {
+                echo "Error updating step goal: " . $stmt->error;
+            }
+
+            $stmt->close();
+        } else {
+            echo "User not found.";
+        }
     } else {
-        echo "Invalid step goal.";
+        echo "Invalid step goal. Please enter a positive number.";
     }
 }
+
+$conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -134,7 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save-goal'])) {
         </div>
         <div class="profile" onclick="toggleDropdown()">U</div>
         <div class="dropdown" id="profileDropdown">
-            <a href="#">Hello, Username</a>
+            <a href="#">Hello, <?php echo htmlspecialchars($_SESSION['username']); ?></a>
             <a href="profile.html">Profile</a>
             <a href="settings.html">Settings</a>
             <a href="logout.html">Log Out</a>

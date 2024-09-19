@@ -1,13 +1,13 @@
 <?php
 session_start();
-include 'db_connect.php'; // Ensure this file path is correct
-include 'admin_dashboard.php'; // Include the PHP logic to fetch users
+include 'db_connect.php';
+include 'admin_dashboard.php';
 
 if (!isset($conn)) {
     die("Database connection not established.");
 }
 
-// Fetch all users
+
 $sql = "SELECT UserID, UName FROM users";
 $result = $conn->query($sql);
 
@@ -172,7 +172,7 @@ $conn->close();
             }
         }
 
-        // Close the dropdown if the user clicks outside of it
+        
         window.onclick = function(event) {
             if (!event.target.matches('.profile')) {
                 var dropdowns = document.getElementsByClassName("dropdown");

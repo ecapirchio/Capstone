@@ -1,10 +1,9 @@
 <?php
 session_start();
-require 'db_connect.php'; // Ensure this file contains your database connection settings
+require 'db_connect.php';
 
 $error_message = "";
 
-// Helper function to find user by username
 function findUserByUsername($username) {
     global $conn;
     $stmt = $conn->prepare("SELECT * FROM users WHERE UName = ?");
@@ -15,7 +14,6 @@ function findUserByUsername($username) {
     return $result->fetch_assoc();
 }
 
-// Helper function to find user by email
 function findUserByEmail($email) {
     global $conn;
     $stmt = $conn->prepare("SELECT * FROM users WHERE Email = ?");
@@ -26,7 +24,6 @@ function findUserByEmail($email) {
     return $result->fetch_assoc();
 }
 
-// Helper function to create user
 function createUser($username, $email, $password) {
     global $conn;
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -36,14 +33,13 @@ function createUser($username, $email, $password) {
     $stmt->close();
 }
 
-// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['Register'])) {
         $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
 
-        // Validate input and check for existing data
+        
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error_message .= "Invalid email format. ";
         }
@@ -63,12 +59,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             if (empty($error_message)) {
                 createUser($username, $email, $password);
-                header('Location: login.php'); // Redirect to login page
+                header('Location: login.php');
                 exit;
             }
         }
     } elseif (isset($_POST['Cancel'])) {
-        header('Location: login.php'); // Redirect to login page
+        header('Location: login.php');
         exit;
     }
 }
@@ -152,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <div class="left">
             <div class="title">Register</div>
-            <!-- Display error message if set -->
+            
             <?php if (!empty($error_message)): ?>
                 <div class="error-message"><?php echo htmlspecialchars($error_message); ?></div>
             <?php endif; ?>

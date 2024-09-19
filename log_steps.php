@@ -13,10 +13,10 @@ if ($conn->connect_error) {
 
 $steps = intval($_POST['steps']);
 
-$sql = "UPDATE user_stats SET steps = steps + ? WHERE UserID = ?"; // Replace ? with the actual user ID
+$sql = "UPDATE user_stats SET steps = steps + ? WHERE UserID = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('ii', $steps, $userId); // Replace $userId with the actual user ID
-$userId = 1; // For example purposes, set this to the current user's ID
+$stmt->bind_param('ii', $steps, $userId);
+$userId = 1;
 $success = $stmt->execute();
 
 echo json_encode(['success' => $success]);

@@ -1,12 +1,12 @@
 <?php
-session_start(); // Ensure session management for admin login
-include 'db_connect.php'; // Ensure this file path is correct
+session_start();
+include 'db_connect.php';
 
 if (!isset($conn)) {
     die("Database connection not established.");
 }
 
-// Fetch all users
+
 $sql = "SELECT UserID, UName FROM users";
 $result = $conn->query($sql);
 
@@ -17,7 +17,7 @@ if ($result->num_rows > 0) {
     }
 }
 
-// Fetch all workouts
+
 $sql = "SELECT WorkoutID, WorkoutName FROM workouts";
 $result = $conn->query($sql);
 
@@ -28,12 +28,12 @@ if ($result->num_rows > 0) {
     }
 }
 
-// Handle adding a workout to a user's list
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_id']) && isset($_POST['workout_id'])) {
     $user_id = intval($_POST['user_id']);
     $workout_id = intval($_POST['workout_id']);
 
-    // Prepare statement to avoid SQL injection
+   
     $stmt = $conn->prepare("INSERT INTO user_stats (UserID, WorkoutID) VALUES (?, ?)");
     $stmt->bind_param("ii", $user_id, $workout_id);
 
@@ -72,7 +72,7 @@ $conn->close();
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            position: relative; /* Ensure dropdown is positioned relative to the header */
+            position: relative;
         }
         .header-left {
             display: flex;
@@ -84,7 +84,7 @@ $conn->close();
             font-size: 1.5em;
         }
         .header-right {
-            position: relative; /* Ensure dropdown is positioned relative to this element */
+            position: relative;
         }
         .profile {
             background: #fff;
@@ -219,7 +219,7 @@ $conn->close();
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Close the dropdown if the user clicks outside of it
+       
         window.onclick = function(event) {
             const dropdown = document.getElementById('profileDropdown');
             if (!event.target.matches('.profile')) {

@@ -194,7 +194,7 @@
     
     <main class="result-container">
         <?php
-        // Database connection
+        
         $servername = "mysql.neit.edu";
         $port = 5500;
         $username = "capstone_202440_capirchio";
@@ -203,7 +203,7 @@
 
         $conn = new mysqli($servername, $username, $password, $dbname, $port);
 
-        // Check connection
+        
         if ($conn->connect_error) {
             die("Connection failed: " . $conn->connect_error);
         }
@@ -211,7 +211,7 @@
         $query = isset($_GET['query']) ? $_GET['query'] : '';
         $workout_type = isset($_GET['workout_type']) ? $_GET['workout_type'] : '';
 
-        // SQL query with filtering
+        
         $sql = "SELECT * FROM workouts WHERE WorkoutName LIKE ?";
 
         if (!empty($workout_type)) {
@@ -258,13 +258,13 @@
     </footer>
 
     <script>
-        // Function to toggle dropdown visibility
+        
         function toggleDropdown() {
             const dropdown = document.getElementById('profileDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Close the dropdown if the user clicks outside of it
+        
         window.onclick = function(event) {
             if (!event.target.matches('.profile')) {
                 const dropdowns = document.getElementsByClassName('dropdown');

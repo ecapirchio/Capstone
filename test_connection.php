@@ -1,5 +1,5 @@
 <?php
-include 'db_connect.php'; // Ensure this path is correct
+include 'db_connect.php';
 
 if (isset($conn)) {
     echo "Database connection established successfully!";

@@ -15,7 +15,6 @@ $filter = $_GET['filter'];
 $sql = "SELECT * FROM exercises WHERE name LIKE ?";
 
 if ($filter === 'my-routines') {
-    // Add additional filtering for 'my-routines'
     $sql .= " AND user_id = ?";
 }
 
@@ -23,7 +22,7 @@ $stmt = $conn->prepare($sql);
 
 $likeQuery = "%$query%";
 if ($filter === 'my-routines') {
-    $userId = 1; // Example user ID; you should use the actual user ID
+    $userId = 1;
     $stmt->bind_param("si", $likeQuery, $userId);
 } else {
     $stmt->bind_param("s", $likeQuery);

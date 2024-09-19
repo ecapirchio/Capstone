@@ -1,5 +1,4 @@
 <?php
-// get_data.php
 
 header('Content-Type: application/json');
 
@@ -12,10 +11,10 @@ if ($conn->connect_error) {
     exit();
 }
 
-$sql = "SELECT calories, steps FROM user_stats WHERE UserID = ?"; // Replace ? with the actual user ID
+$sql = "SELECT calories, steps FROM user_stats WHERE UserID = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param('i', $userId); // Replace $userId with the actual user ID
-$userId = 1; // For example purposes, set this to the current user's ID
+$stmt->bind_param('i', $userId);
+$userId = 1;
 $stmt->execute();
 $result = $stmt->get_result();
 
